@@ -1,5 +1,8 @@
 CREATE TABLE IF NOT EXISTS `av` (
 	`av_id` BIGINT(20) unsigned NOT NULL,
+	`time` VARCHAR(60),
+	`mid` BIGINT(24) unsigned,
+	`duration` BIGINT(30) unsigned,
 	PRIMARY KEY(`av_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE IF NOT EXISTS `detail` (
