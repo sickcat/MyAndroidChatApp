@@ -40,10 +40,20 @@ av_id
 '''
 def insert_av(av):
 	database(1, 'insert into av (av_id, time, mid, duration) values({0}, \'{1}\', {2}, {3})'.format(
-		av['aid'], av['create'], av['mid'], av['duration']))
+		av['aid'] if str(av['aid']).isdigit() else 0,
+		av['create'],
+		av['mid'] if str(av['mid']).isdigit() else 0,
+		av['duration'] if str(av['duration']).isdigit() else 0))
 def insert_detail(av_id, detail):
 	database(1, 'insert into detail (av_id, view, danmaku, favorite, coin, share, now_rank, his_rank) values({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'.format(
-		av_id, detail['view'], detail['danmaku'], detail['favorite'], detail['coin'], detail['share'], detail['now_rank'], detail['his_rank']))
+		av_id if str(av_id).isdigit() else 0, 
+		detail['view'] if str(detail['view']).isdigit() else 0,
+		detail['danmaku'] if str(detail['danmaku']).isdigit() else 0,
+		detail['favorite'] if str(detail['favorite']).isdigit() else 0,
+		detail['coin'] if str(detail['coin']).isdigit() else 0,
+		detail['share'] if str(detail['share']).isdigit() else 0,
+		detail['now_rank'] if str(detail['now_rank']).isdigit(),
+		detail['his_rank'] if str(detail['his_rank']).isdigit()))
 while True:
 	#获取最新视频的id
 	#tid = 24 AMD专区 14 单击联机 65 网游电竞
