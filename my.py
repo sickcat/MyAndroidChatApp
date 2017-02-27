@@ -9,25 +9,37 @@ import time
 import torndb
 import requests
 def database(fun, sql):
-	db = torndb.Connection(host = "localhost", 
-		database = "data",
-		user = "root",
-		password = "bm83147439",
-		time_zone = "+8:00")
-	if fun == 0:
-		return db.query(sql)
-	else:
-		return db.execute(sql)
+	try:
+		db = torndb.Connection(host = "localhost", 
+			database = "data",
+			user = "root",
+			password = "bm83147439",
+			time_zone = "+8:00")
+		if fun == 0:
+			return db.query(sql)
+		else:
+			db.execute(sql)
+			return 0
+	except Exception as e:
+		print sql + ' ERROR MSG0'
+		print str(e) + ' ERROR MSG0'
+		time.sleep(5)
+		return database(fun, sql)
 avid_list = []
 av_not_change_count = {}
+for each in database(0, 'select * from av'):
+	avid_list.append(each['av_id'])
+	av_not_change_count[each['av_id']] = {}
+	av_not_change_count[each['av_id']]['last'] = 0
+	av_not_change_count[each['av_id']]['count'] = 0
 '''
-detail
+detail+
 t_id av_id view danmaku favorite coin share now_rank his_rank
 av
 av_id
 '''
 def insert_av(av):
-	database(1, 'insert into av (av_id, time, mid, duration) values({0}, {1}, {2}, {3})'.format(
+	database(1, 'insert into av (av_id, time, mid, duration) values({0}, \'{1}\', {2}, {3})'.format(
 		av['aid'], av['create'], av['mid'], av['duration']))
 def insert_detail(av_id, detail):
 	database(1, 'insert into detail (av_id, view, danmaku, favorite, coin, share, now_rank, his_rank) values({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})'.format(
@@ -64,7 +76,7 @@ while True:
 			time.sleep(1)
 			continue
 		r_data = eval(r.text)
-		print r.text
+		print str(each) + str(r.text)
 		insert_detail(each, r_data['data'])
 		if av_not_change_count[each]['last'] == r_data['data']['view']:
 			av_not_change_count[each]['count'] += 1
